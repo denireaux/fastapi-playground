@@ -1,0 +1,32 @@
+services:
+
+  # PostresSQL
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # FastAPI
+  api:
+      build:
+        context: .
+        dockerfile: docker/api.Dockerfile
+      ports:
+        - "8000:8000"
+      depends_on:
+        - db
+      environment:
+        - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+        - PYTHONUNBUFFERED=1
+
+  # Keep Alive
+  heartbeat:
+    build:
+      context: .
+      dockerfile: docker/heartbeat.Dockerfile
+    depends_on:
+      - api
