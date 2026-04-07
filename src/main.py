@@ -1,4 +1,3 @@
-import time
 import logging
 from fastapi import FastAPI
 from sqlalchemy import create_engine, text
