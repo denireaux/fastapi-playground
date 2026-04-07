@@ -3,10 +3,7 @@ services:
   # PostresSQL
   db:
     image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+    env_file: .env
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
 
@@ -19,14 +16,12 @@ services:
         - "8000:8000"
       depends_on:
         - db
-      environment:
-        - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
-        - PYTHONUNBUFFERED=1
 
   # Keep Alive
   heartbeat:
     build:
       context: .
       dockerfile: docker/heartbeat.Dockerfile
+    env_file: .env
     depends_on:
       - api
