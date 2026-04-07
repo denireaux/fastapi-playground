@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy import text
 from src.utils import get_logger, database_init, get_db_conn
-import os
 
 log = get_logger()
 app = FastAPI()
